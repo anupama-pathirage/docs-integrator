@@ -1,0 +1,30 @@
+---
+title: Server Configuration
+---
+
+# Server Configuration
+
+All values are set in `<ICP_HOME>/conf/deployment.toml`. Commented-out keys show default values.
+
+## Server Settings
+
+| Key                                  | Type      | Default     | Description                                                           |
+| ------------------------------------ | --------- | ----------- | --------------------------------------------------------------------- |
+| `serverPort`                         | `int`     | `9446`      | HTTPS port for all ICP endpoints                                      |
+| `serverHost`                         | `string`  | `"0.0.0.0"` | Bind address                                                          |
+| `logLevel`                           | `string`  | `"INFO"`    | Log verbosity — `DEBUG`, `INFO`, `WARN`, `ERROR`                      |
+| `enableAuditLogging`                 | `boolean` | `true`      | Enable audit log for authentication and management events             |
+| `enableMetrics`                      | `boolean` | `true`      | Expose Prometheus metrics endpoint                                    |
+| `schedulerIntervalSeconds`           | `int`     | `30`        | Interval (seconds) between health-check polling of connected runtimes |
+| `refreshTokenCleanupIntervalSeconds` | `int`     | `86400`     | How often expired refresh tokens are purged from the database         |
+
+## Authentication Settings
+
+| Key                          | Type      | Default                    | Description                                                       |
+| ---------------------------- | --------- | -------------------------- | ----------------------------------------------------------------- |
+| `authBackendUrl`             | `string`  | `"https://localhost:9447"` | URL of the authentication backend service                         |
+| `frontendJwtHMACSecret`      | `string`  | —                          | HMAC-SHA256 secret for signing JWT tokens (minimum 32 characters) |
+| `defaultTokenExpiryTime`     | `int`     | `3600`                     | JWT access token lifetime in seconds                              |
+| `refreshTokenExpiryTime`     | `int`     | `604800`                   | Refresh token lifetime in seconds (default: 7 days)               |
+| `enableRefreshTokenRotation` | `boolean` | `true`                     | Rotate refresh token on each use                                  |
+| `maxRefreshTokensPerUser`    | `int`     | `0`                        | Maximum active refresh tokens per user (`0` = unlimited)          |
