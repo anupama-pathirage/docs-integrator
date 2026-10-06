@@ -10,7 +10,9 @@ File integrations are ideal for batch uploads, scheduled file processing, and ET
 
 :::info Prerequisites
 
-- [WSO2 Integrator installed](setup/local-setup.md)
+- A working WSO2 Integrator environment. Choose the path that fits how you want to work:
+    - [Cloud setup](setup/cloud-setup.md) — launch WSO2 Integrator in a browser-based cloud editor.
+    - [Local setup](setup/local-setup.md) — install and launch the WSO2 Integrator IDE on your machine.
 - A file at the listener path to watch. Create one if you don't have one:
 
 
@@ -31,7 +33,11 @@ File integrations are ideal for batch uploads, scheduled file processing, and ET
 
 
 
-## Step 1: Create the project
+## Step 1: Create the integration
+
+:::info Note
+
+In the cloud editor, you're already inside a project. Skip to Step 2.
 
 1. Open WSO2 Integrator.
 2. Select the **Create New Integration** card.
@@ -145,7 +151,7 @@ service file:Service on fileListener {
 }
 ```
 
-Save this as `main.bal`, then run `bal run` from the project directory. With the test file already in place (see Prerequisites), run the modify command in a separate terminal to trigger the handler:
+Save this as `main.bal`, then click the **Run** button in the top toolbar. With the test file already in place (see Prerequisites), run the modify command in a separate terminal to trigger the handler:
 
 <TabItem value="unix" label="macOS / Linux" default>
 
@@ -161,8 +167,7 @@ Confirm the run terminal shows the log line `File modified`.
 
 ## What's next
 
-- [Automation](build-automation.md) — Build a scheduled job
-- [AI agent](build-ai-agent.md) — Build an intelligent agent
-- [Integration as API](build-api-integration.md) — Build an HTTP service
-- [Event-driven integration](build-event-driven-integration.md) — React to messages from brokers
 - [Local files](../develop/integration-artifacts/file/local-files.md) — Full Local Files listener reference (events, recursive watching, file handlers)
+- [FTP/SFTP](../develop/integration-artifacts/file/ftp-sftp.md) — Watch and process files on remote FTP or SFTP servers
+- [Streaming large files](../develop/integration-artifacts/file/streaming-large-files.md) — Process large files without loading them fully into memory
+- [CSV fault tolerance](../develop/integration-artifacts/file/csv-fault-tolerance.md) — Handle errors and partial failures when processing CSV files

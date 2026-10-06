@@ -25,6 +25,9 @@ ICP supports two integration profiles that determine the type of runtime that co
 
 The profile is set when the integration is created and cannot be changed later. Runtimes connect to ICP using the bridge library that corresponds to their profile type.
 
+:::info Supported MI versions
+The MI profile in ICP 2.0.0 supports WSO2 Micro Integrator 4.6.0 and later. Earlier MI versions cannot connect to ICP 2.0.0. If you are using an older MI version, download the compatible ICP release from [ICP previous releases](https://wso2.com/integrator/icp/previous-releases/).
+
 ## Default ports
 
 | Port | Protocol | Description |
@@ -39,7 +42,6 @@ The profile is set when the integration is created and cannot be changed later. 
 | `https://<host>:9446/graphql` | GraphQL API |
 | `https://<host>:9446/auth` | Authentication API for login and token refresh |
 | `https://<host>:9446/icp/observability` | Observability REST API |
-| `https://<host>:9446/api/v1` | REST management API (legacy) |
 
 See [ICP API](../../reference/api/icp.md) for the full REST endpoint reference.
 

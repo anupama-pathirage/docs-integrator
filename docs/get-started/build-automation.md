@@ -10,15 +10,22 @@ An automation runs your integration logic without an external request, on demand
 
 :::info Prerequisites
 
-- [WSO2 Integrator installed](setup/local-setup.md)
+A working WSO2 Integrator environment. Choose the path that fits how you want to work:
+
+- [Cloud setup](setup/cloud-setup.md) — launch WSO2 Integrator in a browser-based cloud editor.
+- [Local setup](setup/local-setup.md) — install and launch the WSO2 Integrator IDE on your machine.
 
 ## Step 1: Create the integration
+
+:::info Note
+
+In the cloud editor, you're already inside a project. Skip to Step 2.
 
 1. Open WSO2 Integrator.
 2. Select the **Create New Integration** card.
 3. Set **Integration Name** to `HelloWorldAutomation`.
 4. Set **Project Name** to `automation-quickstart`.
-5. Select **Create**.
+5. **Create Integration**.
 
 <ThemedImage
     alt="Create new integration form with Integration Name set to HelloWorldAutomation and Project Name set to automation-quickstart"
@@ -68,7 +75,7 @@ An automation runs your integration logic without an external request, on demand
     alt="Running the automation and seeing the Hello World output in the terminal"
     sources={{
         light: useBaseUrl('/img/get-started/build-automation/run-and-test-light.gif'),
-        dark: useBaseUrl('/img/get-started/build-automation/run-and-test-dark.gif'),
+        dark: useBaseUrl('/img/get-started/build-automation/run-and-test-light.gif'),
     }}
 />
 
@@ -88,7 +95,19 @@ public function main() returns error? {
 }
 ```
 
-Save this as `automation.bal`, then run `bal run` from the project directory. The terminal output contains `Hello World`.
+Save this as `automation.bal`, then click the **Run** button in the top toolbar. The terminal output contains `Hello World`.
+
+## Step 5: Deploy to WSO2 Cloud
+
+Deploy your integration to WSO2 Cloud - Integration Platform in any of the following ways:
+
+- If you're using the cloud editor, see [Save and deploy](/deploy/cloud/deploy-from-cloud-editor/#save-and-deploy).
+- If you're using the WSO2 Integrator IDE, see [Deploy from the IDE](/deploy/cloud/push-from-ide).
+- If you'd rather skip the build and try a ready-made sample, one-click deploy it:
+
+    <a href="https://console.devant.dev/new?gh=wso2/integration-samples/tree/main/integrator-default-profile/quickstart/automation" target="_blank">
+        <img src="https://openindevant.choreoapps.dev/images/DeployDevant.svg" alt="Deploy to WSO2 Cloud" />
+    </a>
 
 ## Scheduling automations
 
@@ -101,7 +120,7 @@ Periodic invocation is configured in an external system once the automation is d
 
 ## What's next
 
-- [Build an API integration](build-api-integration.md) — Build an HTTP service
+- [Build an Integration as API](build-integration-api.md) — Build an HTTP service
 - [Build an AI agent](build-ai-agent.md) — Build an intelligent agent
 - [Build an event-driven integration](build-event-driven-integration.md) — React to messages from brokers
 - [Build a file-driven integration](build-file-driven-integration.md) — Process files from FTP or local directories

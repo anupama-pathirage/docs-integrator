@@ -6,17 +6,22 @@ title: Observability Setup
 
 ICP provides centralized observability for default profile runtimes. Logs and metrics are collected via Fluent Bit, stored in OpenSearch, and displayed in the ICP console. This page guides you through deploying OpenSearch, creating index templates, configuring the integration, and setting up Fluent Bit to complete the observability stack.
 
-For MI runtimes, see [MI observability setup](mi-profile/observability-setup-mi.md).
+This guide covers **default profile** runtimes. To set up observability for a **WSO2 Integrator: MI** runtime connected to ICP, see [Adding observability for ICP](https://mi.docs.wso2.com/en/latest/install-and-setup/install/adding-observability-for-icp/) in the MI documentation.
 
 :::info Prerequisites
 
-- ICP server running with OpenSearch connection configured in `deployment.toml`. Use `https://` if OpenSearch is running with TLS (including the demo setup). See [Install ICP](install-icp.md).
+- ICP installed and running. See [Install ICP](install-icp.md).
 - Integration connected to ICP with heartbeats working. See [Connect an integration to ICP](connect-runtime.md).
-- Fluent Bit installed on the machine running the default profile runtime. See the [Fluent Bit installation page](https://docs.fluentbit.io/manual/installation/downloads).
 
 ## Architecture
 
-![ICP observability architecture showing the default profile runtime sending logs to Fluent Bit, which ships them to OpenSearch, while the runtime also sends heartbeats to the ICP server. The ICP server queries OpenSearch and serves the ICP console over GraphQL and REST.](/img/manage/icp/observability-architecture-light.png)
+<ThemedImage
+    alt="ICP observability architecture showing the default profile runtime sending logs to Fluent Bit, which ships them to OpenSearch, while the runtime also sends heartbeats to the ICP server. The ICP server queries OpenSearch and serves the ICP console over GraphQL and REST."
+    sources={{
+        light: useBaseUrl('/img/manage/icp/observability-architecture-light.png'),
+        dark: useBaseUrl('/img/manage/icp/observability-architecture-dark.png'),
+    }}
+/>
 
 1. The default profile runtime writes structured logs to two files (`app.log` and `metrics.log`) and sends periodic heartbeats to the ICP server.
 2. Fluent Bit tails both log files and ships them to separate OpenSearch indices over HTTP(S).
@@ -24,7 +29,7 @@ For MI runtimes, see [MI observability setup](mi-profile/observability-setup-mi.
 
 ## 1. Deploy OpenSearch
 
-Any single-node or clustered OpenSearch deployment works. ICP requires HTTP(S) access to the OpenSearch REST API. Keep a note of the host, port, and credentials. You will need them in steps 2 and 4 when configuring Fluent Bit and the ICP server.
+Any single-node or clustered OpenSearch deployment works. ICP requires HTTP(S) access to the OpenSearch REST API. Keep a note of the OpenSearch host, port, and credentials. You will need them throughout the following steps.
 
 If you already have an OpenSearch instance running, skip to [step 2](#2-create-index-templates).
 
@@ -35,8 +40,8 @@ Download and extract the [OpenSearch distribution](https://opensearch.org/downlo
 Set your admin password and run the demo installer. It generates self-signed TLS certificates and initializes the security index.
 
 ```bash
-export OPENSEARCH_INITIAL_ADMIN_PASSWORD="YourStrong@Pass2026"
-export OPENSEARCH_HOME="/path/to/opensearch-2.19.1"
+export OPENSEARCH_INITIAL_ADMIN_PASSWORD="<your-opensearch-password>"
+export OPENSEARCH_HOME="/path/to/opensearch-<version>"
 
 cd $OPENSEARCH_HOME/plugins/opensearch-security/tools
 chmod +x install_demo_configuration.sh
@@ -44,8 +49,8 @@ chmod +x install_demo_configuration.sh
 ```
 
 ```powershell
-$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD="YourStrong@Pass2026"
-$env:OPENSEARCH_HOME="C:\opensearch\opensearch-2.19.1"
+$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD="<your-opensearch-password>"
+$env:OPENSEARCH_HOME="C:\opensearch\opensearch-<version>"
 
 cd $env:OPENSEARCH_HOME\plugins\opensearch-security\tools
 cmd /c install_demo_configuration.bat -y
@@ -75,7 +80,7 @@ cd $env:OPENSEARCH_HOME\bin
 ### Verify OpenSearch is running
 
 ```bash
-curl -sk -u admin:YourStrong@Pass2026 https://localhost:9200
+curl -sk -u admin:<your-opensearch-password> https://localhost:9200
 ```
 
 A JSON response with `"cluster_name"` confirms the node is up.
@@ -84,7 +89,7 @@ The demo configuration is for evaluation only. In production, use properly signe
 
 ### Configure ICP to connect to OpenSearch
 
-Once OpenSearch is running, point the ICP server at it by adding the following keys before the first `[section]` header in `conf/deployment.toml`:
+Once OpenSearch is running, point the ICP server at it by adding the following keys before the first `[section]` header in `conf/deployment.toml` in your ICP installation directory:
 
 ```toml
 opensearchUrl      = "https://localhost:9200"
@@ -116,7 +121,7 @@ Maps the `time`, `message`, and `icp_runtimeId` fields for the `ballerina-applic
 
 ```bash
 curl -k -X PUT 'https://<opensearch-host>:9200/_index_template/wso2_integration_application_log_template' \
-  -u 'admin:<password>' \
+  -u 'admin:<your-opensearch-password>' \
   -H 'Content-Type: application/json' \
   -d '{
     "index_patterns": ["ballerina-application-logs-*"],
@@ -132,6 +137,29 @@ curl -k -X PUT 'https://<opensearch-host>:9200/_index_template/wso2_integration_
   }'
 ```
 
+First, save the following JSON to a file named `app-log-template.json`:
+
+```json
+{
+  "index_patterns": ["ballerina-application-logs-*"],
+  "template": {
+    "mappings": {
+      "properties": {
+        "time": { "type": "date", "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis" },
+        "message": { "type": "text" },
+        "icp_runtimeId": { "type": "keyword" }
+      }
+    }
+  }
+}
+```
+
+Then run in Command Prompt:
+
+```bat
+curl -k -X PUT "https://<opensearch-host>:9200/_index_template/wso2_integration_application_log_template" -u "admin:<your-opensearch-password>" -H "Content-Type: application/json" -d @app-log-template.json
+```
+
 A `{"acknowledged":true}` response confirms the template was created.
 
 ### Metrics logs template
@@ -140,7 +168,7 @@ Maps the same base fields plus numeric types for the latency fields used by the 
 
 ```bash
 curl -k -X PUT 'https://<opensearch-host>:9200/_index_template/wso2_integration_metrics_log_template' \
-  -u 'admin:<password>' \
+  -u 'admin:<your-opensearch-password>' \
   -H 'Content-Type: application/json' \
   -d '{
     "index_patterns": ["ballerina-metrics-logs-*"],
@@ -155,6 +183,30 @@ curl -k -X PUT 'https://<opensearch-host>:9200/_index_template/wso2_integration_
       }
     }
   }'
+```
+
+First, save the following JSON to a file named `metrics-log-template.json`:
+
+```json
+{
+  "index_patterns": ["ballerina-metrics-logs-*"],
+  "template": {
+    "mappings": {
+      "properties": {
+        "time": { "type": "date", "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis" },
+        "message": { "type": "text" },
+        "response_time_seconds": { "type": "float" },
+        "response_time": { "type": "long" }
+      }
+    }
+  }
+}
+```
+
+Then run in Command Prompt:
+
+```bat
+curl -k -X PUT "https://<opensearch-host>:9200/_index_template/wso2_integration_metrics_log_template" -u "admin:<your-opensearch-password>" -H "Content-Type: application/json" -d @metrics-log-template.json
 ```
 
 A `{"acknowledged":true}` response confirms the template was created.
@@ -308,8 +360,8 @@ The main pipeline configuration. It reads `app.log` and `metrics.log`, enriches 
 
 Before using this config, replace the two placeholders:
 
-- `<default-profile-logs>`: absolute path to your default profile application's `logs/` directory. Use forward slashes on all platforms.
-- `<password>`: the OpenSearch password set during step 1.
+- `<default-profile-logs>`: absolute path to your default profile application's `logs/` directory. **Use forward slashes on all platforms.**
+- `<your-opensearch-password>`: the OpenSearch password set during step 1.
 
 ```ini
 [SERVICE]
@@ -408,7 +460,7 @@ Before using this config, replace the two placeholders:
     tls             On
     tls.verify      Off
     HTTP_User       admin
-    HTTP_Passwd     <password>
+    HTTP_Passwd     <your-opensearch-password>
 
 [OUTPUT]
     Name            opensearch
@@ -423,7 +475,7 @@ Before using this config, replace the two placeholders:
     tls             On
     tls.verify      Off
     HTTP_User       admin
-    HTTP_Passwd     <password>
+    HTTP_Passwd     <your-opensearch-password>
 ```
 
 | Setting | Notes |
@@ -441,6 +493,10 @@ Run Fluent Bit from the working directory with your configuration file:
 fluent-bit -c /path/to/fluent-bit/fluent-bit.conf
 ```
 
+```powershell
+fluent-bit -c "C:\path\to\fluent-bit\fluent-bit.conf"
+```
+
 Fluent Bit will begin tailing the log files immediately. Check the console output for any connection errors to OpenSearch.
 
 ## Verification
@@ -450,7 +506,7 @@ Fluent Bit will begin tailing the log files immediately. Check the console outpu
 After the default profile runtime has been running for a minute or two:
 
 ```bash
-curl -sk -u admin:<password> https://localhost:9200/_cat/indices/ballerina-*?v
+curl -sk -u admin:<your-opensearch-password> https://localhost:9200/_cat/indices/ballerina-*?v
 ```
 
 You should see:
@@ -476,7 +532,7 @@ For plain HTTP OpenSearch (no TLS), use `http://` and drop `-k`.
 
 Metrics are generated per inbound HTTP request. If the Metrics page shows "No metrics data", send some traffic to your integration first:
 ```bash
-curl http://localhost:8090/<your-endpoint>
+curl http://localhost:9090/<your-endpoint>
 ```
 
 ## Troubleshooting
@@ -492,7 +548,7 @@ curl http://localhost:8090/<your-endpoint>
 
 ## Index lifecycle
 
-Indices are created daily with a date suffix (e.g. `ballerina-metrics-logs-2026-04-28`). To manage disk usage:
+Indices are created daily with a date suffix (e.g. `ballerina-metrics-logs-2026.04.28`). To manage disk usage:
 
 - Use [OpenSearch Index State Management (ISM)](https://opensearch.org/docs/latest/im-plugin/ism/index/) policies to automatically delete or roll over old indices.
 - A typical retention policy keeps 30 days of logs and 90 days of metrics.
@@ -508,3 +564,4 @@ Indices are created daily with a date suffix (e.g. `ballerina-metrics-logs-2026-
 - [Manage integrations](manage-integrations.md) — view logs and metrics for connected integrations from the ICP console
 - [Manage runtimes](manage-runtimes.md) — monitor runtime health and status alongside observability data
 - [Access control](access-control.md) — control who can view logs and metrics in the ICP console
+- [Adding observability for ICP](https://mi.docs.wso2.com/en/latest/install-and-setup/install/adding-observability-for-icp/) — set up logs and metrics for WSO2 Integrator: MI runtimes connected to ICP

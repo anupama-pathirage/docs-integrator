@@ -10,10 +10,16 @@ Event integrations are designed for reactive workflows triggered by messages fro
 
 :::info Prerequisites
 
-- [WSO2 Integrator installed](setup/local-setup.md)
+- A working WSO2 Integrator environment. Choose the path that fits how you want to work:
+    - [Cloud setup](setup/cloud-setup.md) — launch WSO2 Integrator in a browser-based cloud editor.
+    - [Local setup](setup/local-setup.md) — install and launch the WSO2 Integrator IDE on your machine.
 - A running RabbitMQ instance (or use Docker: `docker run -d -p 5672:5672 -p 15672:15672 rabbitmq:4.2-management`)
 
 ## Step 1: Create the integration
+
+:::info Note
+
+In the cloud editor, you're already inside a project. Skip to Step 2.
 
 1. Open WSO2 Integrator.
 2. Select the **Create New Integration** card.
@@ -112,7 +118,19 @@ service "Orders" on rabbitmqListener {
 }
 ```
 
-Save this as `main.bal`, then run `bal run` from the project directory. Once running, open `http://localhost:15672` (default credentials: guest/guest), navigate to **Queues → Orders → Publish message**, and publish any message. The terminal log should display `Received order`.
+Save this as `main.bal`, then click the **Run** button in the top toolbar. Once running, open `http://localhost:15672` (default credentials: guest/guest), navigate to **Queues → Orders → Publish message**, and publish any message. The terminal log should display `Received order`.
+
+## Step 6: Deploy to WSO2 Cloud
+
+Deploy your integration to WSO2 Cloud - Integration Platform in any of the following ways:
+
+- If you're using the cloud editor, see [Save and deploy](/deploy/cloud/deploy-from-cloud-editor/#save-and-deploy).
+- If you're using the WSO2 Integrator IDE, see [Deploy from the IDE](/deploy/cloud/push-from-ide).
+- If you'd rather skip the build and try a ready-made sample, one-click deploy it:
+
+    <a href="https://console.devant.dev/new?gh=wso2/integration-samples/tree/main/integrator-default-profile/quickstart/orderprocessor" target="_blank">
+        <img src="https://openindevant.choreoapps.dev/images/DeployDevant.svg" alt="Deploy to WSO2 Cloud" />
+    </a>
 
 ## Supported event sources
 
@@ -127,7 +145,8 @@ Save this as `main.bal`, then run `bal run` from the project directory. Once run
 
 ## What's next
 
-- [Automation](build-automation.md) — Build a scheduled job
-- [AI agent](build-ai-agent.md) — Build an intelligent agent
-- [Integration as API](build-api-integration.md) — Build an HTTP service
-- [File-driven integration](build-file-driven-integration.md) — Process files from FTP or local directories
+- [Kafka](../develop/integration-artifacts/event/kafka.md) — Consume and produce Kafka messages
+- [Azure Service Bus](../develop/integration-artifacts/event/azure-service-bus.md) — Integrate with Azure Service Bus queues and topics
+- [RabbitMQ](../develop/integration-artifacts/event/rabbitmq.md) — Full RabbitMQ listener and publisher reference
+- [MQTT](../develop/integration-artifacts/event/mqtt.md) — Handle MQTT messages from IoT and messaging devices
+- [CDC for PostgreSQL](../develop/integration-artifacts/event/cdc-postgresql.md) — React to database changes with change data capture

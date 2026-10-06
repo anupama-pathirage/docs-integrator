@@ -32,11 +32,11 @@ The Visual Designer provides a guided wizard to connect to an existing database,
 
 1. Select the **Database System** (MySQL, MSSQL, or PostgreSQL).
 2. Enter the database credentials:
-   - **Host** — Database server host address.
-   - **Port** — Database server port (for example, `3306` for MySQL).
-   - **Database** — Name of the database to connect.
-   - **User** — Database username.
-   - **Password** — Database user password.
+   - **Host**: Database server host address.
+   - **Port**: Database server port (for example, `3306` for MySQL).
+   - **Database**: Name of the database to connect.
+   - **User**: Database username.
+   - **Password**: Database user password.
 3. Click **Connect & Introspect Database**.
 
    ![Introspect database credentials](/img/develop/tools/persist-tool/introspect-database.png)
@@ -51,7 +51,7 @@ The Visual Designer provides a guided wizard to connect to an existing database,
 ### Step 4: Create connection
 
 1. Enter a **Connection Name** (for example, `MySQLDatabase`).
-2. Review the **Connection Configurables** — configurable variables are generated for the connection host, port, username, password, and database name with default values.
+2. Review the **Connection Configurables**. Configurable variables are generated for the connection host, port, username, password, and database name with default values.
 3. Click **Save**.
 
    ![Connection name and configurables](/img/develop/tools/persist-tool/connection-name.png)
@@ -259,5 +259,5 @@ bal persist push --datastore <datastore> --module <module>
 ## What's next
 
 - [Scan Tool](../other/scan-tool.md) — Analyze Ballerina code for security and quality issues
-- [Configuration management](/docs/reference/config/configuration-management) — Manage data store credentials with configurable variables
-- [Connector catalog](/docs/connectors/catalog/) — Browse database connectors and other connectivity options
+- [Configuration management](../../../reference/config/configuration-management.md) — Manage data store credentials with configurable variables
+- [Connector catalog](../../../connectors/catalog/index.mdx) — Browse database connectors and other connectivity options

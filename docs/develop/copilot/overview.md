@@ -29,6 +29,10 @@ Copilot can search the internet for external context or up-to-date documentation
 
 ![Web tools permission prompt in the Copilot input bar.](/img/develop/copilot/web-tool.png)
 
+## MCP tools
+
+Extend Copilot with your own tools by connecting Model Context Protocol (MCP) servers. Once a server is connected, its tools become available to Copilot in chat alongside the built-in tools. See [MCP tools](mcp-tools.md) to enable it and add a server.
+
 ## Clarifying requirements
 
 During the planning or generation phase, Copilot may identify missing information that is critical to the integration. If a requirement is ambiguous, it pauses and presents a list of suggested options. Select one, or select **Other** to type your own answer.
@@ -65,9 +69,61 @@ Copilot can run your integrations and read the runtime logs to debug issues as t
 
 ![Copilot debugging an integration by reproducing the failing request, inspecting the HTTP response and service logs, and identifying a case-sensitivity bug in the team filter.](/img/develop/copilot/debugging-using-service-logs.png)
 
+## Project instructions
+
+Add an `AGENTS.md` file to your project root to give Copilot standing instructions for the workspace, such as preferred libraries, naming and style rules, or error-handling patterns. Copilot reads the file as project context and applies the relevant instructions on every request.
+
+To create or edit the file, open **Settings** in the Copilot panel and select the file icon on the **Agent instructions** row under **Customize Copilot**. If `AGENTS.md` does not exist yet, selecting the icon creates it from a starter template; otherwise, it opens the existing file for editing.
+
+![The Customize Copilot section in Settings with the Agent instructions row.](/img/develop/copilot/agents-md-settings-row.png)
+
+## Skills
+
+Skills are reusable instruction sets for specific tasks. When your request matches a skill, Copilot applies it automatically for consistent results without repeating the same guidance each time.
+
+Copilot organizes skills into three groups:
+
+- **Built-in**: Skills shipped with Copilot.
+- **Project**: Skills saved to your project under `.agents/skills`.
+- **User**: Skills available across all your projects.
+
+### Manage skills
+
+Open **Settings** in the Copilot panel and select the **Skills** row under **Customize Copilot**. The Skills panel lists each group. Enable or disable individual skills using the controls next to each skill.
+
+Some built-in skills are always active and cannot be disabled.
+
+![The Skills panel listing built-in, project, and user skills with enable toggles.](/img/develop/copilot/skills-manager-panel.png)
+
+### Add your own skill
+
+Select **Add skill** to define a custom skill.
+
+- **Create new**: Enter a **Name**, a **Trigger / Description** that tells Copilot when to use the skill, and an optional **Body** with detailed rules and instructions.
+- **Import**: Upload a `.md` file (with the skill name and description in YAML front matter) or a `.zip` or `.skill` file (containing a `SKILL.md`).
+
+Choose the **Type** to control where the skill lives: **Project** saves it to your project, while **User** makes it available across all your projects.
+
+![The Add skill dialog with the Create new and Import tabs.](/img/develop/copilot/add-skill-modal.png)
+
+### How Copilot uses skills
+
+When a skill is enabled and your request matches its trigger, Copilot applies the skill automatically. If a matching skill is disabled, Copilot pauses and asks whether to enable it. Select **Enable** to turn it on, or **Skip** to continue without it for that message.
+
+![The prompt asking whether to enable a matching skill for the current request.](/img/develop/copilot/enable-skill-prompt.png)
+
+## Chat history
+
+Copilot saves each project's conversation, so it stays available after you reload or restart the IDE. History is tied to the project's location on disk, so it no longer appears if you move, rename, or open the project from a different path.
+
+You can also reset the conversation in two ways:
+
+- **New Chat**: Clears the current project's history and starts a fresh conversation.
+- **Restore Checkpoint**: Rolls your integration back to a saved checkpoint, undoing the changes Copilot made afterward and removing the later prompts.
+
 ## Slash commands
 
-Type `/` in the Copilot input bar to invoke a command for a specific task.
+Type `/` in the Copilot input bar to invoke a command for a specific task. You can also invoke an enabled skill directly: type `/` and select the skill from the list, for example `/data-map`.
 
 | Command | Description |
 |---|---|
@@ -75,15 +131,15 @@ Type `/` in the Copilot input bar to invoke a command for a specific task.
 | `/doc` | Generate documentation for your integration. |
 | `/openapi` | Import OpenAPI specifications. |
 | `/typecreator` | Create custom types. |
-| `/datamap` | [Generate data mappings](../integration-artifacts/supporting/data-mapper/data-mapper.md). |
+| `/data-map` | [Generate data mappings](../integration-artifacts/supporting/data-mapper/ai-mapping.md). |
 | `/natural-programming` | Experimental. Generate code from requirements and check for drift. |
 
-`/ask` answers only from the Ballerina documentation and does not use your codebase context. For questions about your code or any other topic, message Copilot directly without a command.
+`/ask` answers only from the Ballerina documentation and does not use your codebase context. For questions about your code or any other topic, message Copilot directly without a command. `/data-map` is powered by the built-in `data-map` skill rather than a command.
 
 ## See also
 
 - [Getting started](getting-started.md) — Sign in to WSO2 Integrator Copilot.
 - [Generate tests with AI](../test/ai-generated-cases.md) — Use Copilot to generate test cases.
-- [AI data mapper](../integration-artifacts/supporting/data-mapper/data-mapper.md) — Generate data mappings using AI.
+- [AI data mapper](../integration-artifacts/supporting/data-mapper/ai-mapping.md) — Generate data mappings using AI.
 - [Try-It tool](../test/built-in-try-it-tool.md) — Test services without leaving the IDE.
 - [AI usage and data handling guidelines](../../reference/ai-usage-and-data-handling-guidelines.md) — How Copilot handles your data.

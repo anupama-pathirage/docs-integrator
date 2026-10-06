@@ -126,13 +126,11 @@ Ballerina specifications follow a versioning scheme tied to Swan Lake releases.
 | Resource | URL |
 |----------|-----|
 | Language specification (latest) | [ballerina.io/spec/lang/master/](https://ballerina.io/spec/lang/master/) |
-| Language specification (versioned) | [ballerina.io/spec/lang/](https://ballerina.io/spec/lang/) |
 | Module specifications | Each module's GitHub repository under `docs/spec/` |
-| Platform specification | [ballerina.io/spec/](https://ballerina.io/spec/) |
-| Swan Lake release notes | [ballerina.io/downloads/swan-lake-release-notes/](https://ballerina.io/downloads/swan-lake-release-notes/) |
+| Swan Lake release notes | [ballerina.io/downloads/swan-lake-release-notes/](https://ballerina.io/downloads/swan-lake-release-notes/swan-lake-2201.13.4) |
 
 ## See also
 
 - [Ballerina by Example](ballerina-by-example.md) — Runnable code examples
 - [Ballerina API Documentation](api/ballerina-documentation.md) — Module API docs
-- [Release Notes](release-notes.md) — Version history and migration notes
+- [Release Notes](appendix/release-notes.md) — Version history and migration notes

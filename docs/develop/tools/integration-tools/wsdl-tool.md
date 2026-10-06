@@ -25,10 +25,10 @@ bal wsdl --help
 4. Configure the Specification Type to **WSDL** and click **Next**.
 5. In the **Create Connection** step, configure the connection details. Expand **Advanced Configurations** to set the following optional fields:
 
-   - **Service Url** — Override the default endpoint URL defined in the WSDL.
-   - **HTTP Config** — HTTP configuration settings for the connection.
-   - **Outbound Security** — Web service security configurations for SOAP requests.
-   - **Inbound Security** — Web service security configurations to decrypt and verify SOAP responses.
+   - **Service Url**: Override the default endpoint URL defined in the WSDL.
+   - **HTTP Config**: HTTP configuration settings for the connection.
+   - **Outbound Security**: Web service security configurations for SOAP requests.
+   - **Inbound Security**: Web service security configurations to decrypt and verify SOAP responses.
 
    ![Connection details configuration](/img/develop/tools/wsdl-tool/step-connection-details.png)
 
@@ -260,4 +260,4 @@ bal wsdl -i service.wsdl --soap-version 1.2
 
 - [XSD Tool](xsd-tool.md) -- Generate record types from XML Schema definitions
 - [OpenAPI Tool](openapi-tool.md) -- Generate REST services and clients
-- [Configuration Management](/docs/reference/config/configuration-management) -- Manage SOAP endpoint configuration per environment
+- [Configuration Management](../../../reference/config/configuration-management.md) -- Manage SOAP endpoint configuration per environment

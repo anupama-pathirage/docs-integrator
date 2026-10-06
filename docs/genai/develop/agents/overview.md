@@ -17,7 +17,7 @@ An AI agent is composed of four core components that enable reasoning, action ex
 | **Tools** | Functions, APIs, connectors, or services that the agent can invoke during execution |
 | **Memory** | Context and conversation state maintained across interactions |
 
-Without tools, the agent is limited to generating responses without interacting with external systems. Without memory, the agent cannot maintain context across multi-turn conversations.
+Without tools, an agent is limited to generating responses without interacting with external systems. Without memory, the agent cannot maintain context across multi-turn conversations.
 
 In WSO2 Integrator, AI agents can be visually designed, configured with tools and memory, connected to model providers, and exposed through APIs or listeners.
 
@@ -36,9 +36,9 @@ The **AI Agent** block provides a centralized configuration interface for defini
 The **AI Agent** block allows you to configure the following components of the agent:
 
 - **System prompt and agent behavior**: Click the **AI Agent** block to open the configuration panel, where you can configure the agent role, instructions, query input, and response mapping.
-- **Memory configuration**: Use the **Add Memory** option to configure conversational or persistent memory for the agent. For more information, see [Memory](genai/develop/agents/memory.md).
-- **Tools**: Use the **+** button on the AI Agent block to add tools and integrations that the agent can invoke during execution. For more information, see [Tools](genai/develop/agents/tools.md).
-- **Model Provider Configuration**: Click the attached model provider node (for example, `wso2ModelProvider`) to configure the LLM provider and model settings used by the agent. For more information, see [Model Providers](genai/develop/components/model-providers.md).
+- **Memory configuration**: Use the **Add Memory** option to configure conversational or persistent memory for the agent. For more information, see [Memory](./memory.md).
+- **Tools**: Use the **+** button on the AI Agent block to add tools and integrations that the agent can invoke during execution. For more information, see [Tools](./tools.md).
+- **Model Provider Configuration**: Click the attached model provider node (for example, `wso2ModelProvider`) to configure the LLM provider and model settings used by the agent. For more information, see [Model Providers](../components/model-providers.md).
 
 ## Try it and run
 
@@ -66,5 +66,6 @@ The chat interface reuses the same session across interactions, enabling memory-
 - **[Creating an Agent](creating-an-agent.md)** - Learn how to create and configure agents using the AI Chat Agent Wizard.
 - **[Tools](tools.md)** - Add functions, connectors, and integrations to your agents.
 - **[Memory](memory.md)** - Configure conversational and persistent memory.
+- **[Identity & access management](identity-and-access-management.md)** - Secure agents, tools, and integrations using authentication and authorization.
 - **[Observability](observability.md)** - Monitor traces, logs, and execution details.
 - **[Evaluations](evaluations/overview.md)** - Test and evaluate agent behavior and response quality.
